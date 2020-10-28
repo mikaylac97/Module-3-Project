@@ -23,7 +23,35 @@ const userSchema = new Schema(
     photo: {
       type: String,
       default: 'https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png'
-    }
+    },
+    location: {
+      type: String
+    },
+    bio: {
+      type: String
+    },
+    followers: [{
+      type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    following: [{
+      type: Schema.Types.ObjectId, ref: 'User'
+    }],
+    reviews: [{
+      type: Schema.Types.ObjectId, ref: 'Review'
+    }],
+    discussions: [{
+      type: Schema.Types.ObjectId, ref: 'Discussion'
+    }],
+    favoriteGenres: [{
+      type: Schema.Types.ObjectId
+    }],
+    wantToRead: [{
+      type: Schema.Types.ObjectId
+    }],
+    hasRead: [{
+      type: Schema.Types.ObjectId
+    }]
+
   },
   {
     timestamps: true

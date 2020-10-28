@@ -9,15 +9,13 @@ cloudinary.config({
 });
 
 const storage = new CloudinaryStorage({
-  // cloudinary: cloudinary,
   cloudinary,
-  folder: 'my-app-folder-name', // The name of the folder in cloudinary
+  folder: 'Module 3 Project',
   allowedFormats: ['jpg', 'png'],
-  // params: { resource_type: 'raw' }, => this is in case you want to upload other type of files, not just images
   filename: function (req, file, cb) {
-    cb(null, file.originalname); // The file on cloudinary would have the same name as the original file name
+    cb(null, file.originalname); 
   }
 });
 
-//                      storage: storage
+
 module.exports = multer({ storage });
