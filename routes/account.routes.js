@@ -39,5 +39,52 @@ router.post('/account/edit', fileUploader.single('image'), (req, res, next) => {
                 firstName,
                 lastName
             }
+            if(req.file) {
+                editedUser.profilePhotoUrl = req.file.path
+            }
+            return User.findByIdAndUpdate(req.session.passport.user, editedUser)
+        })
+        .then(userFromDB => {
+            console.log(`Edited user is: ${userFromDB}`)
+        })
+        .catch(err => {
+            if(err instanceof mongoose.Error.ValidationError){
+                res.status(500).json({
+                    errorMessage: err.message
+                })
+            } else if (err.code === 11000) {
+                res.status(500).json({
+                    errorMessage: 'Username and email need to be unique. Either username or email is already used.'
+                })
+            } else {
+                next(err)
+            }
         })
 })
+
+// POST route to delete account
+
+router.post('/delete-account', (req, res, next) => {
+    User.find()
+        .then(usersInDB => {
+            usersInDB.forEach(user => {
+                let indexToDelete = user.followers.indexOf(req.session.passport.user.toString())
+                user.followers.splice(indexToDelete,1)
+
+                user.save()
+                    .then(updatedUsers => {
+                        console.log(`Updated followers list: ${updatedUsers.followers}`)
+                    })
+                    .catch(err => console.log(`Error saving the updated user: ${err}`))
+            })
+            User.findByIdAndDelete(req.session.passport.user)
+                .then(deletedUser => {
+                    console.log(`Deleted user: ${deletedUser}`)
+                    req.session.destroy();
+                })
+                .catch(err => console.log(`Error deleting user: ${err}`))
+        })
+        .catch(err => console.log(`Error deleting the user from the other users followers array: ${err}`))
+})
+
+module.exports = router;
