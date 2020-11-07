@@ -70,7 +70,6 @@ router.post('/delete-account', (req, res, next) => {
             usersInDB.forEach(user => {
                 let indexToDelete = user.followers.indexOf(req.session.passport.user.toString())
                 user.followers.splice(indexToDelete,1)
-
                 user.save()
                     .then(updatedUsers => {
                         console.log(`Updated followers list: ${updatedUsers.followers}`)

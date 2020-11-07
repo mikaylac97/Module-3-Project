@@ -37,6 +37,7 @@ require('./configs/passport/passport.config.js')(app);
 // routes middleware
 app.use('/', require('./routes/index.routes'));
 app.use('/', require('./routes/authentication.routes'));
+app.use('/', require('./routes/account.routes'));
 app.use('/', require('./routes/reply.routes'));
 app.use('/', require('./routes/follow.routes'));
 app.use('/', require('./routes/books'));
