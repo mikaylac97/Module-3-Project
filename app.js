@@ -40,6 +40,9 @@ app.use('/', require('./routes/authentication.routes'));
 app.use('/', require('./routes/reply.routes'));
 app.use('/', require('./routes/follow.routes'));
 app.use('/', require('./routes/books'));
+app.use('/', require('./routes/search.routes'));
+app.use('/', require('./routes/review.routes'));
+app.use('/', require('./routes/bookshelf.routes'));
 app.use('/api', require('./routes/discussion.routes'));
 
 // Catch missing routes and forward to error handler

@@ -4,12 +4,19 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-const baseURL = `https://www.googleapis.com/books/v1/volumes?q=${q}&key=${process.env.GB_API_KEY}`
 
-router.get('/api/book-search', (req, res, next) => {
+
+// POST the search results
+
+router.post('/api/book-search', (req, res, next) => {
+    console.log(req.query)
     axios
         .get(`https://www.googleapis.com/books/v1/volumes?q=${req.query.q}&key=${process.env.GB_API_KEY}`)
-        .then(data => res.json({ searchResults : data.body }))
+        .then(searchResults => {
+            res.json({
+                searchOutput: searchResults.data.items
+            })
+        })
         .catch(err => console.log(err))
 })
 
