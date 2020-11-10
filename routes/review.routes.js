@@ -14,9 +14,10 @@ router.get('/api/reviews/:userId', (req, res, next) => {
     User.findById(req.params.userId)
     .populate('reviews')
         .then(foundUser => {
-            res.json({
-                userReviews: foundUser.reviews
-            })
+            foundUser
+                res.json({
+                    reviews: foundUser.reviews
+                })
         })
         .catch(err => console.log(`Error finding user's reviews: ${err}`))
 })
@@ -28,7 +29,8 @@ router.post('/api/review/:bookId', (req, res, next) => {
     Review.create({
         author: req.session.passport.user,
         numOfStars: req.body.numOfStars,
-        content: req.body.content
+        content: req.body.content,
+        book: req.params.bookId
     })
     .then(newReviewFromDB => {
         User.findByIdAndUpdate(req.session.passport.user, {$push: {reviews: newReviewFromDB._id}})

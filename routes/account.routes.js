@@ -10,8 +10,9 @@ const fileUploader = require('../configs/cloudinary.config');
 
 // GET account details page
 
-router.get('/account/:accountId', (req, res, next) => {
+router.get('/api/account/:accountId', (req, res, next) => {
     User.findById(req.params.accountId)
+        .populate('reviews')
         .then(user => {
             const authorized = req.session.passport.user.toString() === user._id.toString()
             res.json({
@@ -24,7 +25,7 @@ router.get('/account/:accountId', (req, res, next) => {
 
 // POST route to edit account details
 
-router.post('/account/edit', fileUploader.single('image'), (req, res, next) => {
+router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) => {
     
     const { firstname, lastname, username, email, password } = req.body;
 
@@ -64,7 +65,7 @@ router.post('/account/edit', fileUploader.single('image'), (req, res, next) => {
 
 // POST route to delete account
 
-router.post('/delete-account', (req, res, next) => {
+router.post('/api/delete-account', (req, res, next) => {
     User.find()
         .then(usersInDB => {
             usersInDB.forEach(user => {
