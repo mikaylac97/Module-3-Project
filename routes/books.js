@@ -11,6 +11,17 @@ const apiKey = process.env.GB_API_KEY;
 
 
 
+
+// GET all books
+
+router.get('/api/books', (req, res, next) => {
+    axios
+        .get(`https://www.googleapis.com/books/v1/volumes?q=%27%27`)
+        .then(booksFromApi => res.json(booksFromApi.data.items))
+        .catch(err => console.log(`Error retrieving all books: ${err}`))
+})
+
+
 // GET Book details page
 
 router.get('/api/details/:bookId', (req, res, next) => {
@@ -19,8 +30,6 @@ router.get('/api/details/:bookId', (req, res, next) => {
 
     Book.findOne({ google_books_id: req.params.bookId })
     .then(bookFromDB => {
-        console.log(bookFromDB);
-        console.log(`Book already exists in DB`);
         if(!bookFromDB) {
             axios
                 .get(`https://www.googleapis.com/books/v1/volumes/${req.params.bookId}`)
@@ -40,9 +49,17 @@ router.get('/api/details/:bookId', (req, res, next) => {
                         // reviews: bookReviews,
                         // discussions: bookDiscussions
                     })
+                    .then(newBook => {
+                        res.json(newBook)
+                        return;
+                    })
+                    .catch(err => console.log(`Error finding newly created book: ${err}`))
                 })
                 // .then(newBookInDB => console.log(`Created new book in DB: ${newBookInDB}`))
                 .catch(err => console.log(`Error creating new book in database from API: ${err}`))
+        } else {
+            res.json(bookFromDB)
+            return;
         }
     })
     .catch(err => console.log(`Error finding book in DB`))

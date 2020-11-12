@@ -54,10 +54,10 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId
     }],
     wantToRead: [{
-      type: String
+      type: Schema.Types.ObjectId, ref: 'Book'
     }],
     hasRead: [{
-      type: String
+      type: Schema.Types.ObjectId, ref: 'Book'
     }]
 
   },

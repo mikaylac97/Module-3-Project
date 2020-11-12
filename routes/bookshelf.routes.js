@@ -11,8 +11,7 @@ const Book = require('../models/Book.model');
 
 router.get('/api/shelves/:userId', (req, res, next) => {
     User.findById(req.params.userId)
-        .populate('wantToRead')
-        .populate('hasRead')
+        .populate('wantToRead', 'hasRead')
         .then(usersShelvesFromDB => {
             res.json({
                 bookshelves: usersShelvesFromDB

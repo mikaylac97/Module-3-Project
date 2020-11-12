@@ -13,6 +13,8 @@ const fileUploader = require('../configs/cloudinary.config');
 router.get('/api/account/:accountId', (req, res, next) => {
     User.findById(req.params.accountId)
         .populate('reviews')
+        .populate('hasRead')
+        .populate('wantToRead')
         .then(user => {
             const authorized = req.session.passport.user.toString() === user._id.toString()
             res.json({
@@ -38,7 +40,8 @@ router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) 
                 email, 
                 passwordHash: hashedPassword,
                 firstName,
-                lastName
+                lastName,
+                bio
             }
             if(req.file) {
                 editedUser.profilePhotoUrl = req.file.path

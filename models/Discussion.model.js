@@ -6,6 +6,7 @@ const discussionSchema = new Schema(
         content: { type: String },
         author: { type: Schema.Types.ObjectId, ref: 'User' },
         replies: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+        book: { type: Schema.Types.ObjectId, ref: 'Book' }
     },
     {
         timestamps: true
