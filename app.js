@@ -24,7 +24,7 @@ require('./configs/db.config');
 // require CORS (Cross-Origin Resource Sharing)
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: '*',
     credentials: true
   })
 );
