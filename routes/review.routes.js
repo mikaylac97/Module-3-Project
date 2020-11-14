@@ -14,8 +14,10 @@ router.get('/api/reviews/:userId', (req, res, next) => {
     User.findById(req.params.userId)
     .populate('reviews')
         .then(foundUser => {
+            const authorized = req.session.passport.user.toString() === foundUser._id.toString()
             foundUser
                 res.json({
+                    authorized,
                     reviews: foundUser.reviews
                 })
         })

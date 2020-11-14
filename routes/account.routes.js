@@ -15,6 +15,15 @@ router.get('/api/account/:accountId', (req, res, next) => {
         .populate('reviews')
         .populate('hasRead')
         .populate('wantToRead')
+        .populate({ 
+            path: 'discussions',
+            populate: {
+              path: 'book',
+              model: 'Book'
+            } 
+         })
+         .populate('followers')
+         .populate('following')
         .then(user => {
             const authorized = req.session.passport.user.toString() === user._id.toString()
             res.json({
@@ -45,7 +54,7 @@ router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) 
             }
             if(req.file) {
                 editedUser.profilePhotoUrl = req.file.path
-            }
+            } 
             return User.findByIdAndUpdate(req.session.passport.user, editedUser)
         })
         .then(userFromDB => {

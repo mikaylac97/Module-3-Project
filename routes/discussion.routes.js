@@ -1,29 +1,37 @@
 const express = require('express');
+// const { default: Bookshelves } = require('../../client-side/src/components/Bookshelves');
 const router = express.Router();
 const Discussion = require('../models/Discussion.model');
 const Reply = require('../models/Reply.model');
 const User = require('../models/User.model');
+const Book = require('../models/Book.model');
 
 
 // Routes to create a new Discussion
 
-router.get('/start-discussion', (req, res) => res.json({ message: 'create discussion page' }))
+router.get('/start-discussion/:bookId', (req, res) => res.json({ message: 'create discussion page' }))
 
-router.post('/start-discussion', (req, res, next) => {
+router.post('/start-discussion/:bookId', (req, res, next) => {
     const { title, content, author } = req.body;
-    // console.log(req.session)
     Discussion.create({
         author: req.session.passport.user,
+        book: req.params.bookId,
         title,
         content
     })
-    .then(discussionFromDB => { 
-        console.log(discussionFromDB)
-        User.findByIdAndUpdate(req.session.passport.user, {$push: {discussions: discussionFromDB}}, { new: true })
-        .then(updatedUser => console.log(updatedUser))
+    .then(newDiscussion => { 
+        User.findByIdAndUpdate(req.session.passport.user, {$push: {discussions: newDiscussion._id}}, { new: true })
+        .then(updatedUserWithDiscussion => {
+            Book.findByIdAndUpdate(req.params.bookId, {$push: {discussions: newDiscussion._id}}, { new: true })
+            .then(() => {
+                res.status(200);
+            })
+        })
+        .catch(err => console.log(`Error updating book with new discussion: ${err}`))
     })
-    .catch(err => console.log(`Error while creating new discussion: ${err}`))
+    .catch(err => console.log(`Error while updating user with new discussion: ${err}`))
 })
+
 
 // Route to view a specific Discussion
 
@@ -51,8 +59,8 @@ router.post('/delete-discuss/:discussionId', (req, res, next) => {
     .catch(err => console.log(`Error finding user in database: ${err}`))
 
     Discussion.findByIdAndDelete(req.params.discussionId)
-    .then(deletedCollection => {
-        console.log(`This is the deleted collection: ${deletedCollection}`)
+    .then(deletedDiscussion => {
+        console.log(`This is the deleted collection: ${deletedDiscussion}`)
     })
     .catch(err => console.log(`Error deleting collection: ${err}`))
 })
