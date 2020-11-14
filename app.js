@@ -24,8 +24,8 @@ require('./configs/db.config');
 // require CORS (Cross-Origin Resource Sharing)
 app.use(
   cors({
-    origin: true
-    // credentials: true
+    origin: true,
+    credentials: true
   })
 );
 
