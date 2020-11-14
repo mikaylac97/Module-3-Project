@@ -25,7 +25,8 @@ require('./configs/db.config');
 app.use(
   cors({
     origin: true,
-    credentials: true
+    credentials: true,
+    'Access-Control-Allow-Origin': '*'
   })
 );
 
