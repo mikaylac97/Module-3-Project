@@ -21,19 +21,19 @@ app.use(cookieParser());
 // require database configuration
 require('./configs/db.config');
 
-// require CORS (Cross-Origin Resource Sharing)
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-    'Access-Control-Allow-Origin': '*'
-  })
-);
-
 
 require('./configs/session.config')(app);
 
 require('./configs/passport/passport.config.js')(app);
+
+// require CORS (Cross-Origin Resource Sharing)
+app.use(
+  cors({
+    origin: true,
+    credentials: true
+    // 'Access-Control-Allow-Origin': '*'
+  })
+);
 
 // routes middleware
 app.use('/', require('./routes/index.routes'));
