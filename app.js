@@ -29,9 +29,9 @@ require('./configs/passport/passport.config.js')(app);
 // require CORS (Cross-Origin Resource Sharing)
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://modest-davinci-9f8ec6.netlify.app/'],
+    origin: ['http://localhost:3000', 'https://modest-davinci-9f8ec6.netlify.app'],
     // allowedHeaders: '*',
-    credentials: true
+    credentials: true,
     // 'Access-Control-Allow-Origin': '*'
   })
 );
