@@ -26,7 +26,6 @@ router.get('/api/books', (req, res, next) => {
 
 router.get('/api/details/:bookId', (req, res, next) => {
 
-    let bookFoundInDB = false;
 
     Book.findOne({ google_books_id: req.params.bookId })
     .then(bookFromDB => {
@@ -41,7 +40,7 @@ router.get('/api/details/:bookId', (req, res, next) => {
                         authors: bookFromAPI.data.volumeInfo.authors,
                         description: bookFromAPI.data.volumeInfo.description,
                         pageCount: bookFromAPI.data.volumeInfo.pageCount,
-                        image_url: bookFromAPI.data.volumeInfo.imageLinks.small,
+                        image_url: bookFromAPI.data.volumeInfo.imageLinks.thumbnail,
                         publishedDate: bookFromAPI.data.publishedDate,
                         publisher: bookFromAPI.data.publisher,
                         language: bookFromAPI.data.volumeInfo.language,
@@ -57,7 +56,7 @@ router.get('/api/details/:bookId', (req, res, next) => {
                 })
                 // .then(newBookInDB => console.log(`Created new book in DB: ${newBookInDB}`))
                 .catch(err => console.log(`Error creating new book in database from API: ${err}`))
-        } else {
+        } else {    
             res.json(bookFromDB)
             return;
         }

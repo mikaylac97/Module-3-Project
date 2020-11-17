@@ -12,7 +12,8 @@ const Review = require('../models/Review.model');
 // GET posts from users that logged in user follows
 
 router.get('/api/posts', (req, res, next) => {
-    User.findById(req.session.passport.user)
+    // console.log(req.user._id)
+    User.findById(req.user._id)
         .then(loggedInUser => {
             loggedInUser.following.map(userTheyFollow => {
                 User.findById(userTheyFollow)
