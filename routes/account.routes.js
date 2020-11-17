@@ -11,6 +11,7 @@ const fileUploader = require('../configs/cloudinary.config');
 // GET account details page
 
 router.get('/api/account/:accountId', (req, res, next) => {
+    // console.log(req.session.passport, req.user)
     User.findById(req.params.accountId)
         .populate('reviews')
         .populate('hasRead')
@@ -25,10 +26,10 @@ router.get('/api/account/:accountId', (req, res, next) => {
          .populate('followers')
          .populate('following')
         .then(user => {
-            const authorized = req.session.passport.user.toString() === user._id.toString()
+            // const authorized = req.session.passport.user.toString() === user._id.toString()
             res.json({
                 user,
-                authorized
+                // authorized
             })
         })
         .catch(err => console.log(`Error finding user in database ${err}`))
