@@ -29,9 +29,10 @@ require('./configs/passport/passport.config.js')(app);
 // require CORS (Cross-Origin Resource Sharing)
 app.use(
   cors({
-    origin: '*',
-    allowedHeaders: '*'
-    // 'Access-Control-Allow-Origin': '*'
+    origin: ['http://localhost:3000'],
+    // allowedHeaders: '*',
+    credentials: true,
+    'Access-Control-Allow-Origin': '*'
   })
 );
 

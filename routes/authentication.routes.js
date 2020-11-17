@@ -85,13 +85,14 @@ router.post('/api/login', (req, res, next) => {
 });
 
 router.post('/api/logout', (req, res, next) => {
+  console.log({user: req.user})
   req.logout();
   res.status(200).json({ message: 'Logout successful!' });
 });
 
-router.get('/api/isLoggedIn', (req, res) => {
+router.get('/api/isLoggedIn', routeGuard, (req, res) => {
+  console.log('here: ', req.user);
   if (req.user) {
-    console.log('here: ', req.user);
     req.user.passwordHash = undefined;
     res.status(200).json({ user: req.user });
     return;
