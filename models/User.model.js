@@ -51,7 +51,7 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId, ref: 'Discussion'
     }],
     favoriteGenres: [{
-      type: Schema.Types.ObjectId
+      type: String
     }],
     wantToRead: [{
       type: Schema.Types.ObjectId, ref: 'Book'

@@ -13,11 +13,19 @@ const User = require('../models/User.model');
 router.get('/api/reviews/:userId', (req, res, next) => {
     User.findById(req.params.userId)
     .populate('reviews')
+    .populate({ 
+        path: 'reviews',
+        populate: {
+          path: 'book',
+          model: 'Book'
+        } 
+     })
         .then(foundUser => {
-            const authorized = req.session.passport.user.toString() === foundUser._id.toString()
+            console.log(foundUser)
+            // const authorized = req.user._id.toString() === foundUser._id.toString()
             foundUser
                 res.json({
-                    authorized,
+                    // authorized,
                     reviews: foundUser.reviews
                 })
         })
@@ -29,7 +37,7 @@ router.get('/api/reviews/:userId', (req, res, next) => {
 
 router.post('/api/review/:bookId', (req, res, next) => {
     Review.create({
-        author: req.session.passport.user,
+        author: req.user._id,
         numOfStars: req.body.numOfStars,
         content: req.body.content,
         book: req.params.bookId
