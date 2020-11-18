@@ -12,15 +12,14 @@ const Book = require('../models/Book.model');
 router.get('/start-discussion/:bookId', (req, res) => res.json({ message: 'create discussion page' }))
 
 router.post('/start-discussion/:bookId', (req, res, next) => {
-    const { title, content, author } = req.body;
     Discussion.create({
-        author: req.session.passport.user,
+        author: req.user._id,
         book: req.params.bookId,
-        title,
-        content
+        title: req.body.title,
+        discussion: req.body.discussion
     })
     .then(newDiscussion => { 
-        User.findByIdAndUpdate(req.session.passport.user, {$push: {discussions: newDiscussion._id}}, { new: true })
+        User.findByIdAndUpdate(req.user._id, {$push: {discussions: newDiscussion._id}}, { new: true })
         .then(updatedUserWithDiscussion => {
             Book.findByIdAndUpdate(req.params.bookId, {$push: {discussions: newDiscussion._id}}, { new: true })
             .then(() => {

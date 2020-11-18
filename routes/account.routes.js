@@ -39,6 +39,10 @@ router.get('/api/account/:accountId', (req, res, next) => {
 
 router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) => {
     
+    // const { username, email, password } = req.
+
+    console.log(req.body)
+
     const { firstname, lastname, username, email, password } = req.body;
 
     bcryptjs
@@ -49,14 +53,15 @@ router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) 
                 username,
                 email, 
                 passwordHash: hashedPassword,
-                firstName,
-                lastName,
-                bio
+                // firstName,
+                // lastName,
+                // bio
             }
             if(req.file) {
-                editedUser.profilePhotoUrl = req.file.path
-            } 
-            return User.findByIdAndUpdate(req.session.passport.user, editedUser)
+                editedUser.photo = req.file.path
+            } else {
+                return User.findByIdAndUpdate(req.user._id, editedUser)
+            }
         })
         .then(userFromDB => {
             console.log(`Edited user is: ${userFromDB}`)
@@ -74,6 +79,8 @@ router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) 
                 next(err)
             }
         })
+
+
 })
 
 // POST route to delete account

@@ -43,7 +43,7 @@ router.post('/api/review/:bookId', (req, res, next) => {
         book: req.params.bookId
     })
     .then(newReviewFromDB => {
-        User.findByIdAndUpdate(req.session.passport.user, {$push: {reviews: newReviewFromDB._id}})
+        User.findByIdAndUpdate(req.user._id, {$push: {reviews: newReviewFromDB._id}})
             .then(reviewWithUpdatedUser => {
                 Book.findByIdAndUpdate(req.params.bookId, {$push: {reviews: reviewWithUpdatedUser}})
                 .then(updatedBook => res.json({
