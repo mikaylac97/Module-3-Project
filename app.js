@@ -50,9 +50,6 @@ app.use('/', require('./routes/timeline.routes'));
 app.use('/api', require('./routes/discussion.routes'));
 
 // Catch missing routes and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
-});
 
 // Catch all error handler
 app.use((error, req, res, next) => {
