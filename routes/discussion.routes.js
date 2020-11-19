@@ -16,15 +16,15 @@ router.post('/start-discussion/:bookId', (req, res, next) => {
         author: req.user._id,
         book: req.params.bookId,
         title: req.body.title,
-        discussion: req.body.discussion
+        content: req.body.content
     })
     .then(newDiscussion => { 
         User.findByIdAndUpdate(req.user._id, {$push: {discussions: newDiscussion._id}}, { new: true })
         .then(updatedUserWithDiscussion => {
             Book.findByIdAndUpdate(req.params.bookId, {$push: {discussions: newDiscussion._id}}, { new: true })
-            .then(() => {
-                res.status(200);
-            })
+            .then(updatedBook => res.json({
+                bookWithNewDiscussion: updatedBook
+            }))
         })
         .catch(err => console.log(`Error updating book with new discussion: ${err}`))
     })
