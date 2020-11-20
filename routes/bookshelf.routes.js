@@ -11,7 +11,8 @@ const Book = require('../models/Book.model');
 
 router.get('/api/shelves/:userId', (req, res, next) => {
     User.findById(req.params.userId)
-        .populate('wantToRead', 'hasRead')
+        .populate('wantToRead')
+        .populate('hasRead')
         .then(usersShelvesFromDB => {
             res.json({
                 bookshelves: usersShelvesFromDB
@@ -24,7 +25,7 @@ router.get('/api/shelves/:userId', (req, res, next) => {
 
 router.get('/api/has-read/:userId', (req, res, next) => {
     User.findById(req.params.userId)
-        // .populate('hasRead')
+        .populate('hasRead')
         .then(usersHasReadShelf => {
             res.json({
                 booksUserHasRead: usersHasReadShelf.hasRead
@@ -51,7 +52,7 @@ router.get('/api/want-to-read/:userId', (req, res, next) => {
 router.post('/api/add-to-has-read/:bookId', (req, res, next) => {
     const bookId = req.params.bookId;
     console.log(bookId)
-    User.findByIdAndUpdate(req.session.passport.user)
+    User.findByIdAndUpdate(req.user._id)
         .then(user => {
             if(user.hasRead.includes(bookId)){
                 console.log(`Book already exists in user's 'want to read' list`)
@@ -76,7 +77,7 @@ router.post('/api/add-to-has-read/:bookId', (req, res, next) => {
 
 router.post('/api/add-to-want-to-read/:bookId', (req, res, next) => {
     const bookId = req.params.bookId;
-    User.findByIdAndUpdate(req.session.passport.user)
+    User.findByIdAndUpdate(req.user._id)
         .then(user => {
             if(user.wantToRead.includes(bookId)){
                 console.log(`Book already exists in user's 'want to read' list`)

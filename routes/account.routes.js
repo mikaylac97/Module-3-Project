@@ -37,13 +37,17 @@ router.get('/api/account/:accountId', (req, res, next) => {
 
 // POST route to edit account details
 
-router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) => {
+router.post('/api/account/edit', fileUploader.single('photo'), (req, res, next) => {
     
     // const { username, email, password } = req.
 
-    console.log(req.body)
+    console.log({
+        body: req.body,
+        user: req.user,
+        file: req.file
+    })
 
-    const { firstname, lastname, username, email, password } = req.body;
+    const { firstname, lastname, username, email, password, bio } = req.body;
 
     bcryptjs
         .genSalt(saltRounds)
@@ -55,30 +59,30 @@ router.post('/api/account/edit', fileUploader.single('image'), (req, res, next) 
                 passwordHash: hashedPassword,
                 // firstName,
                 // lastName,
-                // bio
+                bio
             }
             if(req.file) {
                 editedUser.photo = req.file.path
-            } else {
-                return User.findByIdAndUpdate(req.user._id, editedUser)
-            }
-        })
-        .then(userFromDB => {
-            console.log(`Edited user is: ${userFromDB}`)
-        })
-        .catch(err => {
-            if(err instanceof mongoose.Error.ValidationError){
-                res.status(500).json({
-                    errorMessage: err.message
+            }   console.log(editedUser)
+                User.findByIdAndUpdate(req.user._id, editedUser, { new: true })
+                .then(userFromDB => {
+                    console.log(`Edited user is: ${userFromDB}`)
                 })
-            } else if (err.code === 11000) {
-                res.status(500).json({
-                    errorMessage: 'Username and email need to be unique. Either username or email is already used.'
+                .catch(err => {
+                    if(err instanceof mongoose.Error.ValidationError){
+                        res.status(500).json({
+                            errorMessage: err.message
+                        })
+                    } else if (err.code === 11000) {
+                        res.status(500).json({
+                            errorMessage: 'Username and email need to be unique. Either username or email is already used.'
+                        })
+                    } else {
+                        next(err)
+                    }
                 })
-            } else {
-                next(err)
-            }
         })
+        
 
 
 })

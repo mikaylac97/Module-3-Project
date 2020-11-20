@@ -12,6 +12,11 @@ const Book = require('../models/Book.model');
 router.get('/start-discussion/:bookId', (req, res) => res.json({ message: 'create discussion page' }))
 
 router.post('/start-discussion/:bookId', (req, res, next) => {
+    console.log({
+        user: req.user,
+        book: req.params.bookId,
+        req: req.body
+    })
     Discussion.create({
         author: req.user._id,
         book: req.params.bookId,

@@ -11,18 +11,30 @@ const Review = require('../models/Review.model');
 
 // GET posts from users that logged in user follows
 
-router.get('/api/posts', (req, res, next) => {
-    console.log(req.user._id)
+router.get('/api/posts',  (req, res, next) => {
+    
     User.findById(req.user._id)
         .then(loggedInUser => {
-            loggedInUser.following.map(userTheyFollow => {
-                User.findById(userTheyFollow)
+            const usersWithPosts = loggedInUser.following.map(userTheyFollow => 
+               User.findById(userTheyFollow)
                     .populate('discussions')
                     .populate('reviews')
-                    .then(usersTheyFollowAndPosts => {
-                        res.status(200).json(usersTheyFollowAndPosts)
-                    }).catch(err => console.log(`Error retrieving all posts from users they follow: ${err}`))
-                })
+                    .populate({ 
+                        path: 'reviews',
+                        populate: {
+                          path: 'book',
+                          model: 'Book'
+                        } 
+                     }) 
+                     .populate({ 
+                        path: 'discussions',
+                        populate: {
+                          path: 'book',
+                          model: 'Book'
+                        } 
+                     }) 
+                )
+                return Promise.all(usersWithPosts).then(timelinePosts => res.json({timelinePosts}))
             }).catch(err => console.log(`Error retrieving logged in user: ${err}`))
         })
 
