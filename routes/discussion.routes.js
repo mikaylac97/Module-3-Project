@@ -45,8 +45,18 @@ router.get('/discuss/:discussionId', (req, res, next) => {
         res.json({
             singleDiscussion: discussionFromDB
         })
-    })
+    })  
     .catch(err => console.log(err))
+})
+
+// Route to edit discussion
+
+router.post('/discuss/edit/:discussionId', (req, res, next) => {
+    Discussion.findByIdAndUpdate(req.params.discussionId, req.body, { new: true })
+        .then(updatedDiscussion => {
+            res.status(200).json({updatedDiscussion})
+        })
+        .catch(err => console.log(`Error updating discussion: ${err}`))
 })
 
 // Route to delete specific Discussion
@@ -57,16 +67,16 @@ router.post('/delete-discuss/:discussionId', (req, res, next) => {
         let index = user.discussions.indexOf(req.params.discussionId.toString())
         user.discussions.splice(index, 1);
             user.save()
-            .then(updatedUser => console.log(`The updated user with the deleted collection: ${updatedUser}`))
-            .catch(err => console.log(`Error deleting collection from user data: ${err}`))
+            .then(updatedUser => console.log(`The updated user with the deleted discussion: ${updatedUser}`))
+            .catch(err => console.log(`Error deleting discussion from user data: ${err}`))
     })
     .catch(err => console.log(`Error finding user in database: ${err}`))
 
     Discussion.findByIdAndDelete(req.params.discussionId)
     .then(deletedDiscussion => {
-        console.log(`This is the deleted collection: ${deletedDiscussion}`)
+        console.log(`This is the deleted discussion: ${deletedDiscussion}`)
     })
-    .catch(err => console.log(`Error deleting collection: ${err}`))
+    .catch(err => console.log(`Error deleting discussion: ${err}`))
 })
 
 
