@@ -60,6 +60,8 @@ router.post('/api/review/:bookId', (req, res, next) => {
 
 router.get('/api/review/:reviewId', (req, res, next) => {
     Review.findById(req.params.reviewId)
+        .populate('author')
+        .populate('book')
     .then(reviewFromDB => {
         res.json({
             singleReview: reviewFromDB
