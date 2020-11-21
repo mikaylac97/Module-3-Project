@@ -30,6 +30,13 @@ router.get('/api/account/:accountId', (req, res, next) => {
               model: 'Book'
             } 
          })
+         .populate({ 
+            path: 'discussions',
+            populate: {
+              path: 'author',
+              model: 'User'
+            } 
+         })
          .populate('followers')
          .populate('following')
         .then(user => {

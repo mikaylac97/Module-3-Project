@@ -18,7 +18,14 @@ router.get('/api/reviews/:userId', (req, res, next) => {
         populate: {
           path: 'book',
           model: 'Book'
-        } 
+        }
+     })
+     .populate({ 
+        path: 'reviews',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
      })
         .then(foundUser => {
             console.log(foundUser)
@@ -89,14 +96,14 @@ router.post('/api/review/delete/:reviewId', (req, res, next) => {
         let index = user.reviews.indexOf(req.params.reviewId.toString())
         user.reviews.splice(index, 1);
             user.save()
-            .then(updatedUser => console.log(`The updated user with the deleted review: ${updatedUser}`))
+            .then(updatedUser => res.json(updatedUser))
             .catch(err => console.log(`Error deleting review from user data: ${err}`))
     })
     .catch(err => console.log(`Error finding user in database: ${err}`))
 
     Review.findByIdAndDelete(req.params.reviewId)
     .then(deletedReview => {
-        console.log(`This is the deleted review: ${deletedReview}`)
+        res.json(deletedReview)
     })
     .catch(err => console.log(`Error deleting review: ${err}`))
 })

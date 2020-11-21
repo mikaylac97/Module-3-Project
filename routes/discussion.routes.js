@@ -77,14 +77,14 @@ router.post('/delete-discuss/:discussionId', (req, res, next) => {
         let index = user.discussions.indexOf(req.params.discussionId.toString())
         user.discussions.splice(index, 1);
             user.save()
-            .then(updatedUser => console.log(`The updated user with the deleted discussion: ${updatedUser}`))
+            .then(updatedUser => res.json(updatedUser))
             .catch(err => console.log(`Error deleting discussion from user data: ${err}`))
     })
     .catch(err => console.log(`Error finding user in database: ${err}`))
 
     Discussion.findByIdAndDelete(req.params.discussionId)
     .then(deletedDiscussion => {
-        console.log(`This is the deleted discussion: ${deletedDiscussion}`)
+        res.json(deletedDiscussion)
     })
     .catch(err => console.log(`Error deleting discussion: ${err}`))
 })

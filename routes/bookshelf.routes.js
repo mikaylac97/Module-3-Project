@@ -63,12 +63,14 @@ router.post('/api/add-to-has-read/:bookId', (req, res, next) => {
                     .then(updatedUser => {
                         updatedUser.hasRead.push(bookId)
                         updatedUser.save()
+                        res.json(updatedUser)
                     })
                     .catch(err => console.log(`Error deleting book from want to read and adding to has read: ${err}`))
             } else {
                 user.hasRead.push(bookId)
                 user.save()
             }
+            res.json(user)
         })
         .catch(err => console.log(`Error finding user in database: ${err}`))
 })
@@ -88,12 +90,14 @@ router.post('/api/add-to-want-to-read/:bookId', (req, res, next) => {
                     .then(updatedUser => {
                         updatedUser.wantToRead.push(bookId)
                         updatedUser.save()
+                        res.json(updatedUser)
                     })
                     .catch(err => console.log(`Error deleting book from has read and adding to want to read: ${err}`))
             } else {
                 user.wantToRead.push(bookId)
                 user.save()
             }
+            res.json(user)
         })
         .catch(err => console.log(`Error finding user in database: ${err}`))
 })
