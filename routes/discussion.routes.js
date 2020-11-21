@@ -21,7 +21,7 @@ router.post('/start-discussion/:bookId', (req, res, next) => {
         author: req.user._id,
         book: req.params.bookId,
         title: req.body.title,
-        content: req.body.content
+        discussionContent: req.body.discussionContent
     })
     .then(newDiscussion => { 
         User.findByIdAndUpdate(req.user._id, {$push: {discussions: newDiscussion._id}}, { new: true })
@@ -41,6 +41,16 @@ router.post('/start-discussion/:bookId', (req, res, next) => {
 
 router.get('/discuss/:discussionId', (req, res, next) => {
     Discussion.findById(req.params.discussionId)
+        .populate('author')
+        .populate('book')
+        .populate('replies')
+        .populate({ 
+            path: 'replies',
+            populate: {
+              path: 'author',
+              model: 'User'
+            } 
+         })
     .then(discussionFromDB => {
         res.json({
             singleDiscussion: discussionFromDB

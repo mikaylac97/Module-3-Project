@@ -14,6 +14,13 @@ router.get('/api/account/:accountId', (req, res, next) => {
     // console.log(req.session.passport, req.user)
     User.findById(req.params.accountId)
         .populate('reviews')
+        .populate({ 
+            path: 'reviews',
+            populate: {
+              path: 'book',
+              model: 'Book'
+            } 
+         })
         .populate('hasRead')
         .populate('wantToRead')
         .populate({ 

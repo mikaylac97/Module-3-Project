@@ -7,14 +7,16 @@ const Reply = require('../models/Reply.model')
 
 router.post('/api/discuss/:discussionId/reply', (req, res, next) => {
     const { discussionId } = req.params;
-    const { content } = req.body;
+    const { replyContent } = req.body;
 
+    console.log({
+        body: req.body
+    })
     Discussion.findById(discussionId)
         .then(discussionFromDB => {
-            console.log(discussionFromDB)
             Reply.create({ 
-                content,
-                author: req.session.passport.user
+                replyContent,
+                author: req.user._id
             })
             .then(newComment => {
                 discussionFromDB.replies.push(newComment)
