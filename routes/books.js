@@ -28,6 +28,8 @@ router.get('/api/details/:bookId', (req, res, next) => {
 
 
     Book.findOne({ google_books_id: req.params.bookId })
+    .populate('discussions')
+    .populate('reviews')
     .then(bookFromDB => {
         if(!bookFromDB) {
             axios
