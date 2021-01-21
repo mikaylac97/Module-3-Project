@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Discussion = require('../models/Discussion.model')
 const Reply = require('../models/Reply.model')
+const User = require('../models/User.model')
 
 
 router.post('/api/discuss/:discussionId/reply', (req, res, next) => {
@@ -22,7 +23,17 @@ router.post('/api/discuss/:discussionId/reply', (req, res, next) => {
                 discussionFromDB.replies.push(newComment)
                 discussionFromDB
                     .save()
-                    .then(updatedDiscussion => console.log(updatedDiscussion))
+                    .then(updatedDiscussion => {
+                        updatedDiscussion
+                        .populate({
+                            path: 'replies',
+                            populate: {
+                                path: 'author',
+                                model: 'User'
+                            }
+                        })
+                        res.json({ updatedDiscussion })
+                    })
                     .catch(err => console.log(`Error while saving a reply to a discussion: ${err}`))
             })
             .catch(err => console.log(`Error while creating a reply to a discussion: ${err}`))

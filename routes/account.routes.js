@@ -80,7 +80,7 @@ router.post('/api/account/edit', fileUploader.single('photo'), (req, res, next) 
             }   console.log(editedUser)
                 User.findByIdAndUpdate(req.user._id, editedUser, { new: true })
                 .then(userFromDB => {
-                    console.log(`Edited user is: ${userFromDB}`)
+                    res.status(200).json({ userFromDB })
                 })
                 .catch(err => {
                     if(err instanceof mongoose.Error.ValidationError){
